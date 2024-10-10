@@ -48,9 +48,7 @@ import Vision from "./components/Vision";
 import Events from "./components/Events"; // Only keep this single import for Events
 import Partnerships1 from "./components/Partnerships1"; // Import Partnerships1
 import Footer from "./components/Footer";
-import Loading from "./components/Loading";
-
-import "./App.css";
+import "./App.css"; // Import the main CSS file
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -65,19 +63,13 @@ function App() {
   
   return (
     <div className="app">
-      {!isLoaded ? <Loading /> : (
-        <>
-          <Header />
-          <main>
-            <Hero />
-            <Vision />
-            <Events /> {/* Only one instance of Events */}
-            <Partnerships1 /> {/* Add Partnerships1 here */}
-            {/* Add other sections here as needed */}
-          </main>
-          <Footer />
-        </>
-      )}
+      <Header />
+      <main>
+        <Hero />
+        <Vision />
+        {/* Add other sections like Mission, Research, etc. here */}
+      </main>
+      <Footer />
     </div>
   );
 }
