@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './Hero.css';
 import bloomVideo from "../assets/bloom.mp4";
-import gloomVideo from "../assets/gloom.mp4"; // Import mobile video
+import gloomVideo from "../assets/gloom.mp4"; // Mobile video
+import logo from "../assets/logo.png";
 import a1 from "../assets/a1.jpg";
 import a2 from "../assets/a2.jpg";
 import a3 from "../assets/a3.jpg";
@@ -12,66 +13,73 @@ import a7 from "../assets/a7.jpg";
 import a8 from "../assets/a8.jpg";
 import a9 from "../assets/a9.jpg";
 import a10 from "../assets/a10.jpg";
-import logo from "../assets/logo.png";
 
 function Hero() {
   const [typedText, setTypedText] = useState("");
   const [videoSource, setVideoSource] = useState(bloomVideo); // Track video source
+  const [isMobile, setIsMobile] = useState(false); // Detect if mobile
   const subtitle = "Unlocking the potential of Artificial Intelligence.";
 
+  // Handle typing animation
   useEffect(() => {
     let index = 0;
-    let tempText = ""; // Store progressively typed text
+    let tempText = "";
 
     const typeText = () => {
       if (index < subtitle.length) {
         if (subtitle[index] === "<") {
           const closingTagIndex = subtitle.indexOf(">", index);
-          tempText += subtitle.slice(index, closingTagIndex + 1); // Add the entire tag to the text
-          setTypedText(tempText); // Update the typed text with the full tag
-          index = closingTagIndex + 1; // Skip past the entire tag
+          tempText += subtitle.slice(index, closingTagIndex + 1);
+          setTypedText(tempText);
+          index = closingTagIndex + 1;
         } else {
-          tempText += subtitle[index]; // Add the next character
-          setTypedText(tempText); // Update the state to reflect the new character
-          index++; // Move to the next character
+          tempText += subtitle[index];
+          setTypedText(tempText);
+          index++;
         }
       } else {
-        clearInterval(typeInterval); // Stop the interval when done
+        clearInterval(typeInterval);
       }
     };
 
-    const typeInterval = setInterval(typeText, 100); // Type every 100 ms
-
-    return () => clearInterval(typeInterval); // Clean up the interval on component unmount
+    const typeInterval = setInterval(typeText, 100);
+    return () => clearInterval(typeInterval);
   }, [subtitle]);
 
   // Scroll reveal logic for images
   useEffect(() => {
     const images = document.querySelectorAll('.collage-image');
 
-    // Delay reveal for 2 seconds
     const revealImages = () => {
       images.forEach((image) => {
         image.classList.add('reveal');
       });
     };
 
-    const timer = setTimeout(revealImages, 700); // 2000 ms delay
-
-    return () => clearTimeout(timer); // Clean up the timeout
+    const timer = setTimeout(revealImages, 700);
+    return () => clearTimeout(timer);
   }, []);
 
-  // Detect screen size and switch video source for mobile devices
+  // Detect if device is mobile and switch video source
   useEffect(() => {
+    const isMobileDevice = () => {
+      return (
+        /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
+        window.innerWidth <= 768
+      );
+    };
+
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setVideoSource(gloomVideo); // Use gloom.mp4 for mobile
+      if (isMobileDevice()) {
+        setVideoSource(gloomVideo); // Mobile video
+        setIsMobile(true);
       } else {
-        setVideoSource(bloomVideo); // Use bloom.mp4 for larger screens
+        setVideoSource(bloomVideo); // Desktop video
+        setIsMobile(false);
       }
     };
 
-    handleResize(); // Check screen size on initial load
+    handleResize(); // Check on initial load
     window.addEventListener('resize', handleResize); // Update on window resize
 
     return () => window.removeEventListener('resize', handleResize); // Clean up the event listener
@@ -79,13 +87,19 @@ function Hero() {
 
   return (
     <section className="hero">
-      <video className="video-bg" src={videoSource} autoPlay muted loop playsInline />
+      <video
+        className="video-bg"
+        src={videoSource}
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
       <div className="text-logo-container">
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logon" />
         </div>
         <div className="text-container">
-          {/* Safely render HTML inside typedText */}
           <p className="subtitle" dangerouslySetInnerHTML={{ __html: typedText }} />
         </div>
       </div>
