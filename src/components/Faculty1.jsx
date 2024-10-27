@@ -66,7 +66,7 @@ function Faculty1() {
             />
             <h3>Prof. (Dr.) Moutushi Singh</h3>
             <p>Convenor</p>
-          </div>
+          </div> 
 
           <div className="faculty-member">
             <img
